@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Price Predictor</title>
+  <style>
+    body {
+      background-image: url('background.jpg'); 
+      background-size: cover;
+      background-position: center; 
+      background-repeat: no-repeat; 
+      font-family: Arial, sans-serif; 
+      color: white; 
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background: rgba(159, 146, 146, 0.6); 
+      border-radius: 10px; 
+    }
+    label, input, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+    }
+    button {
+      background-color: #4CAF50; 
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #result {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stock Price Prediction</h1>
+  <form id="predictForm">
+    <label for="open">Open:</label>
+    <input type="number" id="open" name="open" required>
+    <label for="high">High:</label>
+    <input type="number" id="high" name="high" required>
+    <label for="low">Low:</label>
+    <input type="number" id="low" name="low" required>
+    <label for="volume">Volume:</label>
+    <input type="number" id="volume" name="volume" required>
+    <button type="submit">Predict</button>
+  </form>
+  <h2>Predicted Price: <span id="result"></span></h2>
+
+  <script>
+    document.getElementById("predictForm").addEventListener("submit", async function (e) {
+      e.preventDefault(); // Prevent form from reloading the page
+
+      const open = document.getElementById("open").value;
+      const high = document.getElementById("high").value;
+      const low = document.getElementById("low").value;
+      const volume = document.getElementById("volume").value;
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ Open: open, High: high, Low: low, Volume: volume }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          document.getElementById("result").textContent = data.predicted_price.toFixed(2);
+        } else {
+          document.getElementById("result").textContent = "Error: " + data.error;
+        }
+      } catch (error) {
+        document.getElementById("result").textContent = "Error connecting to the server.";
+      }
+    });
+  </script>
+</body>
+</html>
