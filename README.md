@@ -1,1 +1,1 @@
-# Stock-Price-Prediction
+My stock price prediction project utilizes machine learning to analyze historical data and forecast market trends. Initially developed in Jupyter Notebook and converted to Python, it incorporates a Flask API to seamlessly connect the frontend with the backend, enabling efficient real-time predictions.
